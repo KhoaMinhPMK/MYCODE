@@ -24,6 +24,7 @@ from .components.header import render_header
 from .components.progress import progress_handler
 from .components.results import render_reconstruction_results, render_results
 from .components.settings import ensure_display_mode, render_display_settings
+from .components.chatbot import render_chatbot
 
 
 SESSION_KEY = "workspace_results"

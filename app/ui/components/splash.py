@@ -9,9 +9,9 @@ SPLASH_STATE_KEY = "ui_splash_dismissed"
 
 
 def render_splash() -> None:
-    # Temporarily disabled for testing - splash will show every reload
-    # if st.session_state.get(SPLASH_STATE_KEY):
-    #     return
+    # Show once per session
+    if st.session_state.get(SPLASH_STATE_KEY):
+        return
 
     st.markdown(
         """

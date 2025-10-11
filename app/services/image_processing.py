@@ -117,7 +117,7 @@ def sinogram_from_image_array(
 
 
 def reconstruct_image(sinogram: SinogramResult, progress_callback: ProgressCallback = None) -> np.ndarray:
-    """Tái tạo ảnh từ sinogram bằng phép chiếu ngược (Filtered Back Projection)."""
+    """Tái tạo ảnh từ sinogram bằng chiếu ngược có lọc (Filtered Back Projection)."""
 
     if progress_callback:
         progress_callback(0.97, "Đang tái tạo ảnh CT...")
@@ -159,3 +159,4 @@ def get_image_info(img: np.ndarray) -> dict[str, str]:
         "Kênh màu": "Grayscale" if len(img.shape) == 2 else f"{img.shape[2]} channels",
         "Min/Max": f"{img.min()} / {img.max()}",
     }
+

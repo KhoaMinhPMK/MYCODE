@@ -7,7 +7,7 @@ from app.ui.styles import apply_global_styles
 
 def main() -> None:
     st.set_page_config(
-        page_title="xử lý ảnh CT",
+        page_title="Xử lý ảnh CT",
         page_icon="🩻",
         layout="wide",
         initial_sidebar_state="collapsed",
@@ -16,6 +16,15 @@ def main() -> None:
     apply_global_styles()
     render_splash()
     render_app()
+
+    # Footer: link to Chatbot page (use switch_page for compatibility)
+    st.divider()
+    if st.button("🤖 Mở trang Chatbot", use_container_width=True):
+        try:
+            st.switch_page("pages/Chatbot.py")
+        except Exception:
+            # Fallback by page name in some Streamlit versions
+            st.switch_page("Chatbot")
 
 
 if __name__ == "__main__":

@@ -22,9 +22,9 @@ class ControlState:
     reconstruct_requested: bool
 
 
-SOURCE_OPTIONS = {
-    "Ảnh chuẩn 2D": "png",
-    "Chuỗi DICOM": "dicom",
+SOURCE_OPTIONS: Dict[str, str] = {
+    "Ảnh 2D (PNG/JPG)": "png",
+    "Tệp DICOM": "dicom",
     "Camera trực tiếp": "webcam",
 }
 
@@ -36,7 +36,7 @@ MODE_META = {
     },
     "reconstruct": {
         "name": "Sinogram Lab",
-        "description": "Đón sinogram có sẵn và dựng lát cắt tức thì.",
+        "description": "Đã có sinogram và dựng lát cắt tức thì.",
         "icon": "ti-wave-sine",
     },
 }
@@ -47,7 +47,7 @@ def _render_mode_panel() -> str:
 
     with mode_switch_col:
         mode_toggle = st.toggle(
-            "Bật Sinogram Lab",
+            "Chuyển sang Sinogram Lab",
             value=st.session_state.get("mode_switch", False),
             key="mode_switch",
         )
@@ -90,12 +90,12 @@ def render_controls() -> ControlState:
     reconstruct_requested = False
 
     if mode == "pipeline":
-        st.markdown("<div class='section-heading'><i class='ti ti-database'></i><span>Kho dữ liệu đầu vào</span></div>", unsafe_allow_html=True)
-        
+        st.markdown("<div class='section-heading'><i class='ti ti-database'></i><span>Nguồn dữ liệu đầu vào</span></div>", unsafe_allow_html=True)
+
         # Render source selector as 3 buttons
         source_cols = st.columns(3)
         source_key = st.session_state.get("selected_source", "png")
-        
+
         for idx, (source_label, source_value) in enumerate(SOURCE_OPTIONS.items()):
             with source_cols[idx]:
                 is_active = source_value == source_key
@@ -114,7 +114,7 @@ def render_controls() -> ControlState:
             auto_process = st.toggle("Tự động xử lý sau khi tải", value=False, key="toggle_auto")
         with col_note:
             st.markdown(
-                "<span class='hint-text'>Chế độ tự động hữu ích khi xử lý nhiều ảnh nhỏ.</span>",
+                "<span class='hint-text'>Chỉ bật tự động khi xử lý nhiều ảnh nhỏ.</span>",
                 unsafe_allow_html=True,
             )
 
@@ -129,9 +129,9 @@ def render_controls() -> ControlState:
                 label_visibility="collapsed",
             ) or []
         elif source_key == "dicom":
-            st.markdown("<div class='section-subtitle'><i class='ti ti-file-dicom'></i><span>Tải file DICOM</span></div>", unsafe_allow_html=True)
+            st.markdown("<div class='section-subtitle'><i class='ti ti-file-dicom'></i><span>Tải tệp DICOM</span></div>", unsafe_allow_html=True)
             dicoms = st.file_uploader(
-                "Chọn file DICOM (.dcm)",
+                "Chọn tệp DICOM (.dcm)",
                 type=["dcm"],
                 accept_multiple_files=True,
                 label_visibility="collapsed",
@@ -154,7 +154,7 @@ def render_controls() -> ControlState:
                 process_requested = st.button("Xử lý ảnh webcam", use_container_width=True)
     else:
         source_key = "sinogram"
-        st.markdown("<div class='section-heading'><i class='ti ti-wave-sine'></i><span>Phòng tái tạo sinogram</span></div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-heading'><i class='ti ti-wave-sine'></i><span>Khu vực tái tạo sinogram</span></div>", unsafe_allow_html=True)
         sinograms = st.file_uploader(
             "Chọn sinogram (PNG/JPG/TIFF hoặc .npy)",
             type=["png", "jpg", "jpeg", "tif", "tiff", "npy"],
@@ -178,9 +178,9 @@ def render_controls() -> ControlState:
         <div class='control-tips glass-section'>
             <h4><i class='ti ti-bulb'></i> Mẹo thao tác nhanh</h4>
             <ul>
-                <li>Dùng batch nhỏ để dễ dàng so sánh trước/sau theo từng lô.</li>
+                <li>Xử lý theo lô để dễ so sánh trước/sau theo từng ảnh.</li>
                 <li>Ghi chú góc chụp khi tải sinogram để đối chiếu với kết quả tái tạo.</li>
-                <li>Tối ưu kích thước tái tạo theo mục tiêu: 256 cho duyệt nhanh, 512 cho báo cáo.</li>
+                <li>Chọn kích thước tái tạo theo mục tiêu: 256 để duyệt nhanh, 512 cho báo cáo.</li>
             </ul>
         </div>
         """,
@@ -200,3 +200,4 @@ def render_controls() -> ControlState:
         process_requested=process_requested,
         reconstruct_requested=reconstruct_requested,
     )
+

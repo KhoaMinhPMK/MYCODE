@@ -51,5 +51,6 @@ def load_sinogram_image(file: UploadedFile) -> np.ndarray:
     data = np.frombuffer(raw_bytes, dtype=np.uint8)
     image = cv2.imdecode(data, cv2.IMREAD_GRAYSCALE)
     if image is None:
-        raise ValueError("Không thể đọc sinogram ở định dạng đã chọn.")
+        raise ValueError("Không thể đọc sinogram theo định dạng đã chọn.")
     return image.astype(np.uint8)
+

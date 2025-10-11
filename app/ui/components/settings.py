@@ -38,30 +38,6 @@ def ensure_display_mode() -> str:
     return st.session_state[DISPLAY_MODE_KEY]
 
 
-def _mode_selector(current_mode: str) -> str:
-    options: List[str] = list(_MODE_ORDER)
-    return st.radio(
-        "Bố cục làm việc",
-        options=options,
-        index=options.index(current_mode),
-        horizontal=True,
-        key="layout_mode_selector",
-        format_func=lambda value: DISPLAY_METADATA[value]["label"],
-    )
-
-
-def _palette_selector(active_palette: str) -> str:
-    palette_map = palette_options()
-    palette_ids: List[str] = list(palette_map.keys())
-    return st.radio(
-        "Bảng màu",
-        options=palette_ids,
-        index=palette_ids.index(active_palette),
-        key="palette_selector",
-        format_func=lambda value: palette_map[value].label,
-    )
-
-
 def render_display_settings() -> str:
     current_mode = ensure_display_mode()
     palette_key = active_palette_name()
@@ -70,12 +46,11 @@ def render_display_settings() -> str:
     st.markdown("<div class='settings-bar'>", unsafe_allow_html=True)
     spacer, trigger = st.columns([1, 0.2])
     with trigger:
-        settings_popover = st.popover("Tuỳ chỉnh giao diện", use_container_width=True)
+        settings_popover = st.popover("Tùy chỉnh giao diện", use_container_width=True)
         with settings_popover:
             st.markdown("<div class='settings-popover'>", unsafe_allow_html=True)
             st.markdown("<h4 class='settings-section-title'><i class='ti ti-adjustments'></i> Bố cục làm việc</h4>", unsafe_allow_html=True)
-            
-            # Render clickable layout mode buttons
+
             layout_cols = st.columns(2)
             updated_mode = current_mode
             for idx, mode_value in enumerate(_MODE_ORDER):
@@ -90,22 +65,20 @@ def render_display_settings() -> str:
                         type=button_type,
                     ):
                         updated_mode = mode_value
-            
+
             st.caption(DISPLAY_METADATA[updated_mode]["description"])
 
             st.divider()
             st.markdown("<h4 class='settings-section-title'><i class='ti ti-color-swatch'></i> Chủ đề</h4>", unsafe_allow_html=True)
-            
-            # Render clickable palette cards
+
             palette_map = palette_options()
             palette_cols = st.columns(4)
-            
+
             selected_palette = palette_key
             for idx, (palette_id, palette) in enumerate(palette_map.items()):
                 with palette_cols[idx]:
                     is_active = palette_id == palette_key
                     button_type = "primary" if is_active else "secondary"
-                    # Create button with icon
                     button_label = f"{palette.label}"
                     if st.button(
                         button_label,
@@ -114,13 +87,13 @@ def render_display_settings() -> str:
                         type=button_type,
                     ):
                         selected_palette = palette_id
-            
-            st.caption("Thay đổi sắc độ để phù hợp môi trường trình chiếu hoặc sở thích cá nhân")
+
+            st.caption("Thay đổi sắc độ để phù hợp môi trường trình chiếu hoặc thị hiếu cá nhân")
 
             st.divider()
             dark_enabled = st.toggle("Kích hoạt Dark Mode", value=is_dark_mode, key="dark_mode_toggle")
             st.caption("Giảm chói khi làm việc trong phòng tối hoặc buổi đêm")
-            
+
             st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -136,3 +109,4 @@ def render_display_settings() -> str:
 
     apply_theme_tokens()
     return st.session_state[DISPLAY_MODE_KEY]
+

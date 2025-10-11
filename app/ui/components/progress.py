@@ -37,3 +37,4 @@ def progress_handler(
         progress_bar.empty()
         status_text.empty()
     target.success(success_message)
+

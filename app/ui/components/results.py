@@ -12,19 +12,18 @@ from app.services.pipeline import ProcessedImage, ReconstructionResult
 
 def _image_to_bytes(img_array: np.ndarray, format: str = "PNG") -> bytes:
     """Convert numpy array to image bytes for download."""
-    # Normalize to 0-255 if needed
     if img_array.dtype != np.uint8:
-        img_normalized = ((img_array - img_array.min()) / (img_array.max() - img_array.min()) * 255).astype(np.uint8)
+        img_normalized = (
+            (img_array - img_array.min()) / (img_array.max() - img_array.min()) * 255
+        ).astype(np.uint8)
     else:
         img_normalized = img_array
-    
-    # Convert to PIL Image
+
     if len(img_normalized.shape) == 2:
-        pil_img = Image.fromarray(img_normalized, mode='L')
+        pil_img = Image.fromarray(img_normalized, mode="L")
     else:
-        pil_img = Image.fromarray(img_normalized, mode='RGB')
-    
-    # Save to bytes
+        pil_img = Image.fromarray(img_normalized, mode="RGB")
+
     buf = BytesIO()
     pil_img.save(buf, format=format)
     return buf.getvalue()
@@ -38,14 +37,12 @@ def _render_image_with_download(
 ) -> None:
     """Render image with overlay download button."""
     import base64
-    
-    # Create download link
+
     img_bytes = _image_to_bytes(img_array)
     b64 = base64.b64encode(img_bytes).decode()
-    
-    # Generate unique ID for this image
+
     container_id = f"img-container-{key_suffix}"
-    
+
     st.markdown(
         f"""
         <div class='image-container' id='{container_id}'>
@@ -71,7 +68,7 @@ def _render_result_card(result: ProcessedImage, index: int, total: int) -> None:
         f"""
         <div class='glass-section'>
             <div style='display:flex; justify-content: space-between; align-items:center; margin-bottom: 0.5rem;'>
-                <div class='result-badge'><i class='ti ti-stack-2'></i>Lô {index}/{total}</div>
+                <div class='result-badge'><i class='ti ti-stack-2'></i>Ảnh {index}/{total}</div>
                 <h3 style='margin:0;'>{result.name}</h3>
             </div>
         </div>
@@ -147,7 +144,7 @@ def render_reconstruction_results(results: Iterable[ReconstructionResult]) -> No
             """
             <div class='glass-section'>
                 <h3>Chưa có sinogram</h3>
-                <p>Tải sinogram ở panel bên trái để tái tạo ảnh CT.</p>
+                <p>Tải sinogram ở bảng điều khiển bên trái để tái tạo ảnh CT.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -189,3 +186,4 @@ def render_reconstruction_results(results: Iterable[ReconstructionResult]) -> No
 
         if idx < total:
             st.divider()
+
