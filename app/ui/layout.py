@@ -18,6 +18,7 @@ from app.services.pipeline import (
     process_sinogram_array,
 )
 
+from .components.chat import render_chat_page
 from .components.controls import ControlState, render_controls
 from .components.header import render_header
 from .components.progress import progress_handler
@@ -228,6 +229,15 @@ def _push_notification(kind: str, title: str, message: str) -> None:
 
 def render_app() -> None:
     _init_session_state()
+    
+    # Initialize page state
+    if "current_page" not in st.session_state:
+        st.session_state.current_page = "main"
+    
+    # Handle navigation
+    if st.session_state.current_page == "chat":
+        render_chat_page()
+        return
     
     display_mode = render_display_settings()
     render_header()
